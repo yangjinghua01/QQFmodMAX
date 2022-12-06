@@ -4,7 +4,7 @@ plugins {
 
 android {
     compileSdkVersion 31
-    buildToolsVersion "33.0.1"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.example.qqfmod"
@@ -14,22 +14,22 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-//        TODO 第四步
+        // TODO 第四步
         externalNativeBuild {
             cmake {
-//                cppFlags ''//默认四大平台
-//                指定CPU架构Cmake的本地库，例如
+                // cppFlags "" // 默认五大平台a
+
+                // 指定CPU架构，Cmake的本地库， 例如：native-lib ---> armeabi-v7a
                 abiFilters "armeabi-v7a"
             }
         }
-//        TODO 第五步
-//        指定CPU架构，打入Apk lib/cpu平台
-        ndk{
+
+        // TODO 第五步
+        // 指定CPU架构，打入APK lib/CPU平台
+        ndk {
             abiFilters "armeabi-v7a"
         }
-//        sourceset 可以修改jnilib的路径
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -56,6 +56,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation files('libs/fmod.jar')
+    implementation 'org.jetbrains:annotations:15.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

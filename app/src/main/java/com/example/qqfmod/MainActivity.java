@@ -3,34 +3,69 @@ package com.example.qqfmod;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.qqfmod.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+import org.fmod.FMOD;
 
-    // Used to load the 'native-lib' library on application startup.
+public class MainActivity extends AppCompatActivity {
+    private static  final  int MODE_NORMAL=0;
+    private static final int MODE_LUOLI = 1; //
+    private static final int MODE_DASHU = 2; //
+    private static final int MODE_JINGSONG = 3; //
+    private static final int MODE_GAOGUAI = 4; //
+    private static final int MODE_KONGLING = 5; //
     static {
         System.loadLibrary("native-lib");
     }
-
-    private ActivityMainBinding binding;
-
+    private String path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        // Example of a call to a native method
-        TextView tv = binding.sampleText;
-        tv.setText(stringFromJNI());
+        setContentView(R.layout.activity_main);
+        path =  "file:///android_asset/11.mp3";
+        FMOD.init(this);
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FMOD.close();
+    }
+    // 六个 点击事件
+    public void onFix(@org.jetbrains.annotations.NotNull View view) {
+        switch (view.getId()) {
+            case R.id.btn_normal:
+                if (path == null){
+                    Log.d("YJH", "onFix: btn_normal");
+                }
+                voiceChangeNative(MODE_NORMAL, path); // 真实开发中，必须子线程  JNI线程（很多坑）
+                break;
+            case R.id.btn_luoli:
+                Log.d("YJH", "onFix: btn_luoli");
+                voiceChangeNative(MODE_LUOLI, path);
+                break;
+            case R.id.btn_dashu:
+                Log.d("YJH", "onFix: btn_dashu");
+                voiceChangeNative(MODE_DASHU, path);
+                break;
+            case R.id.btn_jingsong:
+                voiceChangeNative(MODE_JINGSONG, path);
+                break;
+            case R.id.btn_gaoguai:
+                voiceChangeNative(MODE_GAOGUAI, path);
+                break;
+            case R.id.btn_kongling:
+                voiceChangeNative(MODE_KONGLING, path);
+                break;
+        }
+    }
+    private native void voiceChangeNative(int nodeNormal,String path);
+    private void playerEnd(String msg) {
+        Toast.makeText(this, "" +msg, Toast.LENGTH_SHORT).show();
+    }
 }
